@@ -48,8 +48,8 @@ bool Item::writeToStream(std::ostream &os)
     return os.good();
 }
 
-bool Item::checkOut(Patron p) {
-    return false;
+CheckOutStatus Item::checkOut(Patron p) {
+    return CheckOutStatusError;
 }
 
 CheckInStatus Item::checkIn(Patron p) {

@@ -12,8 +12,9 @@
 #include <iostream>
 #include "Patron.h"
 
-enum ItemType {ItemTypeAdultBook,ItemTypeChildBook,ItemTypeVideoTape,ItemTypeDVD};
-enum CheckInStatus {CheckInStatusOnTime,CheckInStatusLate,CheckInStatusError};
+enum ItemType { ItemTypeAdultBook, ItemTypeChildBook, ItemTypeVideoTape, ItemTypeDVD };
+enum CheckInStatus { CheckInStatusOnTime, CheckInStatusLate, CheckInStatusError };
+enum CheckOutStatus { CheckOutStatusSuccess, CheckOutStatusTooManyBooks, CheckOutStatusAdultContent, CheckOutStatusError };
 
 class Item;
 
@@ -29,7 +30,7 @@ class Item {
 public:
     static Item* readFromStream(std::istream &is);
     bool writeToStream(std::ostream &os);
-    virtual bool checkOut(Patron p);
+    virtual CheckOutStatus checkOut(Patron p);
     CheckInStatus checkIn(Patron p);
     
     friend std::ostream& operator<<(std::ostream &os, Item &item)

@@ -22,9 +22,10 @@ class Patron {
     int id;
     std::string first;
     std::string last;
-    bool child;
     
 public:
+    bool child;
+    
     static Patron* readFromStream(std::istream &is);
     bool writeToStream(std::ostream &os);
     
