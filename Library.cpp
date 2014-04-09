@@ -41,7 +41,6 @@ void Library::load()
             break;
         
         patrons.push_back( Unique_patron(p) );
-        cout << *p;
     }
     
     getline(file, input);
@@ -54,7 +53,6 @@ void Library::load()
             break;
         
         items.push_back( Unique_item(item) );
-        cout << *item;
     }
     
     file.close();
