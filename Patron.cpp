@@ -34,7 +34,7 @@ Patron* Patron::readFromStream(std::istream &is)
     p->last = input;
     
     getline(is, input);
-    p->child = atoi(input.c_str());
+    p->child = atoi(input.c_str()) == 1;
         
     return p;
 }
