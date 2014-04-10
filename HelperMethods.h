@@ -9,7 +9,7 @@
 #ifndef Library_HelperMethods_h
 #define Library_HelperMethods_h
 
-#pragma mark - Helper Methods
+//#pragma mark - Helper Methods
 
 #include <ostream>
 

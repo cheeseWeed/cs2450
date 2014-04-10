@@ -13,7 +13,7 @@
 
 using namespace std;
 
-#pragma mark - Constructor/Destructor
+//#pragma mark - Constructor/Destructor
 Library::Library(string aFilename)
     : filename(aFilename)
 {
@@ -25,7 +25,7 @@ Library::~Library()
     this->save();
 }
 
-#pragma mark - Private Methods
+//#pragma mark - Private Methods
 void Library::load()
 {
     fstream file(filename, ios_base::in);
