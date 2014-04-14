@@ -48,7 +48,7 @@ void Library::load()
         throw runtime_error("ERROR: file not correct format.");
     }
     while ( file ) {
-        Item *item = Item::readFromStream(file);
+        Item *item = Item::readFromStream(file); // TODO: How do we determine which object type to use?
         if (item == nullptr)
             break;
         
@@ -69,6 +69,17 @@ void Library::save()
     }
     
     file << ITEM_ID << endl;
+    for (auto &item: items) {
+        item->writeToStream(file);
+    }
+    
+    cout << "Saved '" << filename << "'." << endl;
     
     file.close();
+}
+
+void Library::listAllItems(ostream &os) {
+    for (auto &item: items) {
+        os << *item << endl;
+    }
 }

@@ -4,6 +4,8 @@
 
 using namespace std;
 
+Library *lib;
+
 void mainMenu()
 {
     cout << "Main Menu:" << endl;
@@ -11,13 +13,35 @@ void mainMenu()
     cout << tab << "2) Checkin a book." << endl;
     cout << tab << "3) List overdue books." << endl;
     cout << tab << "4) List patron's books." << endl;
+    cout << tab << "5) List all books and media." << endl;
+    cout << tab << "q) Quit." << endl << endl;
     
-    char num = '0';
-    cin.get(num);
+    char input = '0';
+    cin.get(input);
+    cin.get(); // '\n'
     
-    cout << num << endl;
+    switch (input) {
+        case '1':
+            break;
+        case '2':
+            break;
+        case '3':
+            break;
+        case '4':
+            break;
+        case '5':
+            lib->listAllItems(cout);
+            break;
+        case 'q':
+        case 'Q':
+            return;
+        default:
+            cout << "Please choose an option 1-5." << endl;
+            break;
+    }
+    
+    mainMenu();
 };
-
 
 int main (int argc, const char * argv[]) {
     if (argc < 2) // expecting './library library_file.ldb'
@@ -31,9 +55,11 @@ int main (int argc, const char * argv[]) {
         throw runtime_error("ERROR: Must provide .ldb filetype.");
     }
     
-    Library lib(filename);
+    lib = new Library(filename);
     
     mainMenu();
+    
+    delete lib;
     
 	return 0;
 }

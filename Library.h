@@ -31,6 +31,8 @@ public:
     explicit Library(string aFilename);
     ~Library();
     
+    void listAllItems(ostream &os);
+    
     bool checkout(Patron patron, Item item);
     bool checkin(Patron patron, Item item);
 };
