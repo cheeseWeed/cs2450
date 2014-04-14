@@ -10,6 +10,7 @@
 #define ITEM_ID "#ITEM"
 
 #include "Library.h"
+#include <stdexcept>
 
 using namespace std;
 
