@@ -2,10 +2,13 @@
 #include <string>
 #include <stdexcept>
 #include "Library.h"
+#include "Date.h"
 
 using namespace std;
 
 Library *lib;
+Date *date;
+
 
 void mainMenu()
 {
@@ -15,6 +18,7 @@ void mainMenu()
     cout << tab << "3) List overdue books." << endl;
     cout << tab << "4) List patron's books." << endl;
     cout << tab << "5) List all books and media." << endl;
+	cout << tab << "6) Advance the date." << endl;
     cout << tab << "q) Quit." << endl << endl;
     
     char input = '0';
@@ -33,6 +37,8 @@ void mainMenu()
         case '5':
             lib->listAllItems(cout);
             break;
+		case '6':
+			break;
         case 'q':
         case 'Q':
             return;
