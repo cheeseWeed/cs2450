@@ -34,16 +34,18 @@ void mainMenu()
             break;
         case '4':
             break;
-        case '5':
-            lib->listAllItems(cout);
-            break;
+		case '5':
+					 lib->listAllItems(cout);
+					 break;
 		case '6':
-			break;
+					 date->AdvanceDate();
+					 break;
+		
         case 'q':
         case 'Q':
             return;
         default:
-            cout << "Please choose an option 1-5." << endl;
+            cout << "Please choose an option 1-6. or q" << endl;
             break;
     }
     
