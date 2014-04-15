@@ -24,7 +24,7 @@ void mainMenu()
     char input = '0';
     cin.get(input);
     cin.get(); // '\n'
-    
+	Date;
     switch (input) {
         case '1':
             break;
@@ -65,7 +65,7 @@ int main (int argc, const char * argv[]) {
     }
     
     lib = new Library(filename);
-    
+	date = new Date();
     mainMenu();
     
     delete lib;

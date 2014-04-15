@@ -10,10 +10,13 @@ private:
 	int day;
 	int month;
 	int year;
-	void DateCheck();
+	int daysInMonth;
+	void DaysCheck();
+	void AdvanceDayMonthYear(int);
 public:
 	Date();
 	void AdvanceDate();
+	string TodayIs();
 
 
 };
