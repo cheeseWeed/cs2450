@@ -11,21 +11,27 @@ void Date::AdvanceDate(){
 	cout << "\ntoday is: " << month << "/" << day << "/" << year << endl;
 	cout <<"How many days would you like to advance:  ";
 	int daysPlus = 0;
-	while(!(cin>>daysPlus)){
+	string number;
+	getline(cin, number);
+	try{
+		daysPlus = stoi(number);
+	}
+	catch (exception){
+		AdvanceDate();
+	}
+	/*while(!(cin>>daysPlus)){
 		cout <<daysPlus;
 		cout << "You must enter a real number"<<endl;
 		cin.clear(40,'\n');
 		cin.ignore(INT_MAX, '\n');
-		fflush(stdin);
-		/*cin.ignore();
-		cin.clear(40, '\n');*/
-		AdvanceDate();
-	}
+		fflush(stdin);*/
+		//AdvanceDate();
+	//}
 	cout << daysPlus;
 	DaysCheck();
 	AdvanceDayMonthYear(daysPlus);
-	cin.ignore();
-	cin.clear(40, '\n');
+	//cin.ignore();
+	//cin.clear(40, '\n');
 
 }
 
