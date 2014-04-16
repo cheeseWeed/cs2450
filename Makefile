@@ -13,7 +13,10 @@ Patron.o: Patron.h Patron.cpp
 	g++ -g -stdlib=libc++ -std=c++11 -Wall -c Patron.cpp
 
 Item.o: Item.h Item.cpp
-	g++ -g -stdlib=libc++ -std=c++11 -Wall -c Item.cpp
+	g++ -g -std=c++11 -Wall -c Item.cpp
+
+Date.o: Date.h Date.cpp
+	g++ -g -std=c++11 -Wall -c Date.cpp
 
 Date.o: Date.h Date.cpp
 	g++ -g -stdlib=libc++ -std=c++11 -Wall -c Date.cpp
