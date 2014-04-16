@@ -23,7 +23,7 @@ void mainMenu()
     
     char input = '0';
     cin.get(input);
-    cin.get(); // '\n'
+    cin.ignore(INT_MAX, '\n'); // '\n'
     
     switch (input) {
         case '1':
