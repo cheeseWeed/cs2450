@@ -1,10 +1,17 @@
 #include "Date.h"
 
+using namespace std;
+
+unique_ptr<Date> Date::instance{new Date()};
+
 Date::Date(){
 	month = 10;
 	day = 21;
 	year = 2015;
-	daysInMonth;
+}
+
+Date& Date::Instance() {
+    return *instance;
 }
 
 void Date::AdvanceDate(){

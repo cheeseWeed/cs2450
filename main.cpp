@@ -7,8 +7,6 @@
 using namespace std;
 
 Library *lib;
-Date *date;
-
 
 void mainMenu()
 {
@@ -24,7 +22,6 @@ void mainMenu()
     char input = '0';
     cin.get(input);
     cin.get(); // '\n'
-	Date;
     switch (input) {
         case '1':
             break;
@@ -38,7 +35,7 @@ void mainMenu()
 					 lib->listAllItems(cout);
 					 break;
 		case '6':
-					 date->AdvanceDate();
+					 Date::Instance().AdvanceDate();
 					 break;
 		
         case 'q':
@@ -53,20 +50,28 @@ void mainMenu()
 };
 
 int main (int argc, const char * argv[]) {
-    if (argc < 2) // expecting './library library_file.ldb'
+
+    try
     {
-        throw runtime_error("ERROR: Must provide file path to library.");
+
+        if (argc < 2) // expecting './library library_file.ldb'
+        {
+            throw runtime_error("ERROR: Must provide file path to library.");
+        }
+        
+        string filename = argv[1];
+        
+        if (filename.find(".ldb") == string::npos) {
+            throw runtime_error("ERROR: Must provide .ldb filetype.");
+        }
+    
+        lib = new Library(filename);
+        mainMenu();
     }
-    
-    string filename = argv[1];
-    
-    if (filename.find(".ldb") == string::npos) {
-        throw runtime_error("ERROR: Must provide .ldb filetype.");
+    catch (exception& ex)
+    {
+        cout << ex.what() << endl;
     }
-    
-    lib = new Library(filename);
-	date = new Date();
-    mainMenu();
     
     delete lib;
     

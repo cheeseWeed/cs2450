@@ -1,22 +1,30 @@
+#ifndef __Library__Date__
+#define __Library__Date__
 
-//#ifndef __Date__Date__
-//#define __Date__Date__
+#include <memory>
 #include <string>
 #include <iostream>
-using namespace std;
+
 class Date{
 
 private:
+    static std::unique_ptr<Date> instance;
+
 	int day;
 	int month;
 	int year;
 	int daysInMonth;
 	void DaysCheck();
 	void AdvanceDayMonthYear(int);
-public:
-	Date();
-	void AdvanceDate();
-	string TodayIs();
 
+    Date();
+public:
+
+    static Date& Instance();
+	void AdvanceDate();
+	std::string TodayIs();
 
 };
+
+#endif /* defined(__Library__Date__) */
+
