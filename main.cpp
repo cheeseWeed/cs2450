@@ -10,7 +10,7 @@ Library *lib;
 
 void mainMenu()
 {
-    cout << "Main Menu:" << endl;
+    cout << endl << "Main Menu:" << endl;
     cout << tab << "1) Checkout a book." << endl;
     cout << tab << "2) Checkin a book." << endl;
     cout << tab << "3) List overdue books." << endl;

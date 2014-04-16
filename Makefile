@@ -22,4 +22,4 @@ clean:
 	rm -f test_library
 	rm -f library
 	rm -rf *.dSYM
-	rm -r *.o
+	rm -rf *.o

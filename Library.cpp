@@ -80,7 +80,9 @@ void Library::save()
 }
 
 void Library::listAllItems(ostream &os) {
+    Item::printColumns(os);
+    
     for (auto &item: items) {
-        os << *item << endl;
+        os << *item;
     }
 }

@@ -10,7 +10,11 @@
 #define __Library__Item__
 
 #include <iostream>
+#include <iomanip>
 #include "Patron.h"
+
+#define COLUMN_WIDTH_SMALL 7
+#define COLUMN_WIDTH_LARGE 20
 
 enum ItemType { ItemTypeAdultBook, ItemTypeChildBook, ItemTypeVideoTape, ItemTypeDVD };
 enum CheckInStatus { CheckInStatusOnTime, CheckInStatusLate, CheckInStatusError };
@@ -28,6 +32,9 @@ class Item {
     int patron_id; // patron who checked out book
     
 public:
+    static void printColumns(std::ostream &os);
+    std::string formattedDueDate();
+    
     static Item* readFromStream(std::istream &is);
     bool writeToStream(std::ostream &os);
     virtual CheckOutStatus checkOut(Patron p);
@@ -35,7 +42,7 @@ public:
     
     friend std::ostream& operator<<(std::ostream &os, Item &item)
     {
-        return os << item.id << tab << item.title << tab << item.type << tab << item.due_date << tab << item.patron_id << std::endl;
+        return os << std::setw(COLUMN_WIDTH_SMALL) << std::left << item.id << std::setw(COLUMN_WIDTH_LARGE) << std::left << item.title << std::setw(COLUMN_WIDTH_SMALL) << std::left << item.type << std::setw(COLUMN_WIDTH_LARGE) << std::left << item.formattedDueDate() << std::setw(COLUMN_WIDTH_SMALL) << std::left << item.patron_id << std::endl;
     }
 };
 
