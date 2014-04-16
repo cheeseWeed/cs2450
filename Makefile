@@ -18,9 +18,6 @@ Item.o: Item.h Item.cpp
 Date.o: Date.h Date.cpp
 	g++ -g -std=c++11 -Wall -c Date.cpp
 
-Date.o: Date.h Date.cpp
-	g++ -g -stdlib=libc++ -std=c++11 -Wall -c Date.cpp
-
 clean: 
 	rm -f test_library
 	rm -f library
