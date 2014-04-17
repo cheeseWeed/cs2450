@@ -11,6 +11,20 @@
 
 using namespace std;
 
+void Item::printColumns(std::ostream &os)
+{
+    os << setw(COLUMN_WIDTH_SMALL) << left << "ID" << setw(COLUMN_WIDTH_LARGE) << left << "Title" << setw(COLUMN_WIDTH_SMALL) << left << "Type" << setw(COLUMN_WIDTH_LARGE) << left << "Due Date" << setw(COLUMN_WIDTH_SMALL) << left << "Patron" << endl;
+}
+
+string Item::formattedDueDate()
+{
+    char buff[20];
+    time_t t_due_date = this->due_date;
+    strftime(buff, 20, "%m/%d/%Y %I:%M %p", localtime(&t_due_date));
+    
+    return buff;
+}
+
 Shared_item Item::readFromStream(std::istream &is)
 {
     char c;
