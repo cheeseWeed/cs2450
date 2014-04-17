@@ -90,18 +90,22 @@ void Library::load()
 
 void Library::save()
 {
-    fstream file(filename, ios_base::trunc);
+    fstream file(filename, ios_base::out | ios_base::trunc);
     
     file.seekg(0, file.beg);
     
     file << PAT_ID << endl;
     for (auto &p: patrons) {
-        p->writeToStream(file);
+        if (!p->writeToStream(file)) {
+            cout << "Error saving to file." << endl;
+        }
     }
     
     file << ITEM_ID << endl;
     for (auto &item: items) {
-        item->writeToStream(file);
+        if (!item->writeToStream(file)) {
+            cout << "Error saving to file." << endl;
+        }
     }
     
     cout << "Saved '" << filename << "'." << endl;

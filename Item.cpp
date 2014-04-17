@@ -41,17 +41,14 @@ string Item::formattedDueDate()
 
 Shared_item Item::readFromStream(std::istream &is)
 {
-    char c;
-    is.get(c);
-    is.putback(c);
-    
-    if (c == '\0')
-        return nullptr;
-    
     string input;
     Shared_item item{ new Item()};
     
     getline(is, input, ',');
+    
+    if (input.empty())
+        return nullptr;
+    
     item->id = atoi(input.c_str());
     
     getline(is, input, ',');
