@@ -45,7 +45,7 @@ int requestPatronId()
     return pid;
 }
 
-int requestItemId()
+int requestItemId(bool checkedOut)
 {
     int iid = -1;
 
@@ -58,7 +58,7 @@ int requestItemId()
         if(cin >> iid)
         {
             if (iid == -1) {
-                lib->listAvailableItems(cout);
+                lib->listItems(cout, checkedOut?ItemSearchCheckedOut:ItemSearchCheckedIn);
             }
             else if (iid == -2) {
                 throw user_abort();
@@ -83,7 +83,7 @@ void listPatronsBooks()
 void checkout()
 {
     int pid = requestPatronId();
-    int iid = requestItemId();
+    int iid = requestItemId(false);
 
     CheckOutStatus status = lib->checkout(pid, iid);
 
@@ -108,7 +108,7 @@ void checkout()
 
 void checkin()
 {
-    int iid = requestItemId();
+    int iid = requestItemId(true);
 
     CheckInStatus status = lib->checkin(iid);
 
@@ -157,13 +157,13 @@ void mainMenu()
                     checkin();
                     break;
                 case '3':
-                    lib->listOverdueItems(cout);
+                    lib->listItems(cout, ItemSearchOverdue);
                     break;
                 case '4':
                     listPatronsBooks();
                     break;
                 case '5':
-                    lib->listAllItems(cout);
+                    lib->listItems(cout, ItemSearchAll);
                     break;
                 case '6':
                     Date::Instance().AdvanceDate();

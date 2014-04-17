@@ -17,6 +17,7 @@
 #include "Item.h"
 
 class Library {
+
     std::string filename;
     std::vector<Unique_patron> patrons;
     std::vector<Shared_item> items;
@@ -31,13 +32,9 @@ public:
     explicit Library(std::string aFilename);
     ~Library();
     
-    void listAllItems(std::ostream &os);
+    void listItems(std::ostream &os, ItemSearch is);
 
     void listAllPatrons(std::ostream &os);
-
-    void listAvailableItems(std::ostream &os);
-
-    void listOverdueItems(std::ostream &os);
 
     void listPatronItems(std::ostream &os, int patronId);
 

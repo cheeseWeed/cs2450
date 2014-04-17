@@ -88,6 +88,8 @@ bool Patron::writeToStream(std::ostream &os)
 
 void Patron::listItems(ostream& os)
 {
+    Item::printColumns(os);
+
     for (auto &item: items)
         os << *item;
 }

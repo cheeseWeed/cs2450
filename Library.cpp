@@ -109,11 +109,16 @@ void Library::save()
     file.close();
 }
 
-void Library::listAllItems(ostream &os) {
+void Library::listItems(ostream &os, ItemSearch is) {
     Item::printColumns(os);
     
-    for (auto &item: items) {
-        os << *item;
+    for (auto &item: items) 
+    {
+        if (is == ItemSearchAll
+            || (is == ItemSearchCheckedOut && item->getPatronId() != 0)
+            || (is == ItemSearchCheckedIn && item->getPatronId() == 0)
+            || (is == ItemSearchOverdue && item->isOverdue()))
+            os << *item;
     }
 }
 
@@ -122,24 +127,6 @@ void Library::listAllPatrons(ostream &os)
     for (auto &patron: patrons)
     {
         os << *patron;
-    }
-}
-
-void Library::listAvailableItems(ostream &os)
-{
-    for (auto &item: items)
-    {
-        if (item->getPatronId() == 0)
-            os << *item;
-    }
-}
-
-void Library::listOverdueItems(ostream &os)
-{
-    for (auto &item: items)
-    {
-        if (item->isOverdue())
-            os << *item;
     }
 }
 
