@@ -8,6 +8,15 @@
 
 using namespace std;
 
+enum LibraryCommand {
+    LibraryCommandCheckIn,
+    LibraryCommandCheckOut,
+    LibraryCommandList,
+    LibraryCommandAdvanceDate,
+    LibraryCommandQuit,
+    LibraryCommandHelp
+};
+
 class user_abort : public runtime_error
 {
 public: 
@@ -17,18 +26,35 @@ public:
 
 Library *lib;
 
+void print_list_help() {
+    cout << tab << "list [sub-command]" << endl;
+    cout << tab << tab << "items (list all items)" << endl;
+    cout << tab << tab << "patron (list all patron items)" << endl;
+    cout << tab << tab << "overdue (list all over due items)" << endl;
+}
+
+void print_help() {
+    cout << endl;
+    cout << "usage: <command> [sub-commands, ...]" << endl;
+    cout << tab << "checkin [item_id] (Checkin an item)" << endl;
+    cout << tab << "checkout [patron_id] [item_id] (Checkout an item to a patron)" << endl;
+    print_list_help();
+    cout << tab << "advance_date [number_of_days] (simulate future date)" << endl;
+    cout << tab << "quit" << endl;
+}
+
 int requestPatronId()
 {
+    string patron_id;
     int pid = -1;
 
     while (pid < 0)
     {
-        cin.clear();
-        cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
-
         cout << "Please enter the Patron's ID (-1: list, -2: cancel): ";
-        if (cin >> pid)
+        if ( getline(cin, patron_id) )
         {
+            pid = stoi(patron_id);
+            
             if (pid == -1) {
                 lib->listAllPatrons(cout);
             }
@@ -47,16 +73,16 @@ int requestPatronId()
 
 int requestItemId(bool checkedOut)
 {
+    string item_id;
     int iid = -1;
 
     while (iid < 0)
     {
-        cin.clear();
-        cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
-
         cout << "Please enter the Item's ID (-1: list, -2: cancel): ";
-        if(cin >> iid)
+        if( getline(cin, item_id) )
         {
+            iid = stoi(item_id);
+            
             if (iid == -1) {
                 lib->listItems(cout, checkedOut?ItemSearchCheckedOut:ItemSearchCheckedIn);
             }
@@ -80,11 +106,29 @@ void listPatronsBooks()
     lib->listPatronItems(cout, pid);
 }
 
-void checkout()
+void checkout(string args)
 {
-    int pid = requestPatronId();
-    int iid = requestItemId(false);
-
+    string patron_id = "";
+    string item_id = "";
+    if (args.find(' ') != string::npos) {
+        patron_id = args.substr(0, args.find(' '));
+        item_id = args.substr(args.find(' '));
+    }
+    
+    int pid = -1;
+    if (patron_id.empty()) {
+        pid = requestPatronId();
+    } else {
+        pid = stoi(patron_id);
+    }
+    
+    int iid = -1;
+    if (item_id.empty()) {
+        iid = requestItemId(false);
+    } else {
+        iid = stoi(item_id);
+    }
+    
     CheckOutStatus status = lib->checkout(pid, iid);
 
     switch (status)
@@ -106,9 +150,15 @@ void checkout()
     }
 }
 
-void checkin()
+void checkin(string item_id)
 {
-    int iid = requestItemId(true);
+    int iid = -1;
+    
+    if (item_id.empty()) {
+        iid = requestItemId(true);
+    } else {
+        iid = stoi(item_id);
+    }
 
     CheckInStatus status = lib->checkin(iid);
 
@@ -128,56 +178,79 @@ void checkin()
     }
 }
 
+void list(string input) {
+    string sub_command;
+    
+    if (!input.empty() )
+    {
+        if (input == "items") {
+            lib->listItems(cout, ItemSearchAll);
+        } else if (input == "patron") {
+            listPatronsBooks();
+        } else if (input == "overdue") {
+            lib->listItems(cout, ItemSearchOverdue);
+        } else {
+            print_list_help();
+            cout << "sub-command: ";
+            getline(cin, sub_command);
+            list(sub_command);
+        }
+    }
+    else
+    {
+        print_list_help();
+        cout << "sub-command: ";
+        getline(cin, sub_command);
+        list(sub_command);
+    }
+}
+
+LibraryCommand getCommand() {
+    cout << endl << "Enter a command: ";
+    
+    string command;
+    
+    if ( getline(cin, command) )
+    {
+        if (command.find("checkin") != string::npos) {
+            checkin(command.substr(command.find(' ')+1));
+            return LibraryCommandCheckIn;
+        } else if (command.find("checkout") != string::npos) {
+            checkout(command.substr(command.find(' ')+1));
+            return LibraryCommandCheckOut;
+        } else if (command.find("list") != string::npos) {
+            list(command.substr(command.find(' ')+1));
+            return LibraryCommandList;
+        } else if (command.find("advance_date") != string::npos) {
+            Date::Instance().AdvanceDate();
+            return LibraryCommandAdvanceDate;
+        } else if (command.find("quit") != string::npos || command.find("q") != string::npos) {
+            return LibraryCommandQuit;
+        } else {
+            cout << "Please enter a valid command." << endl;
+            print_help();
+            return LibraryCommandHelp;
+        }
+    }
+    else
+    {
+        return getCommand();
+    }
+    
+    return LibraryCommandHelp;
+};
+
 void mainMenu()
 {
+    cout << "Welcome to the Library! (enter 'help' to get a list of commands')" << endl;
     bool quit = false;
     while (!quit)
     {
         try
         {
-            cout << endl << "Main Menu:" << endl;
-            cout << tab << "1) Checkout a book." << endl;
-            cout << tab << "2) Checkin a book." << endl;
-            cout << tab << "3) List overdue books." << endl;
-            cout << tab << "4) List patron's books." << endl;
-            cout << tab << "5) List all books and media." << endl;
-            cout << tab << "6) Advance the date." << endl;
-            cout << tab << "q) Quit." << endl << endl;
-            
-            char input = '0';
-
-            cin >> input;
-            
-            switch (input) {
-                case '1':
-                    checkout();
-                    break;
-                case '2':
-                    checkin();
-                    break;
-                case '3':
-                    lib->listItems(cout, ItemSearchOverdue);
-                    break;
-                case '4':
-                    listPatronsBooks();
-                    break;
-                case '5':
-                    lib->listItems(cout, ItemSearchAll);
-                    break;
-                case '6':
-                    Date::Instance().AdvanceDate();
-                    break;
-                case 'q':
-                case 'Q':
-                    quit = true;
-                    break;
-                default:
-                    cout << "Please choose an option 1-6. or q" << endl;
-                    break;
+            if (LibraryCommandQuit == getCommand()) {
+                quit = true;
             }
-
-            cin.clear();
-            cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
         }
         catch (exception &ex)
         {
@@ -190,7 +263,6 @@ int main (int argc, const char * argv[]) {
 
     try
     {
-
         if (argc < 2) // expecting './library library_file.ldb'
         {
             throw runtime_error("ERROR: Must provide file path to library.");

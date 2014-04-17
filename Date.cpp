@@ -24,6 +24,9 @@ void Date::AdvanceDate(){
     int daysPlus = 0;
 	
     if ( cin >> daysPlus ) {
+        cin.clear();
+        cin.ignore(); // '\n'
+        
         DaysCheck();
         AdvanceDayMonthYear(daysPlus);
     } else {
