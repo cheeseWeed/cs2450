@@ -31,11 +31,12 @@ void Item::printColumns(std::ostream &os)
 
 string Item::formattedDueDate()
 {
-    char buff[20];
-    time_t t_due_date = this->due_date;
-    strftime(buff, 20, "%m/%d/%Y %I:%M %p", localtime(&t_due_date));
-    
-    return buff;
+    //char buff[20];
+    //time_t t_due_date = this->due_date;
+    //strftime(buff, 20, "%m/%d/%Y %I:%M %p", localtime(&t_due_date));
+    //
+    //return buff;
+	return "";
 }
 
 Shared_item Item::readFromStream(std::istream &is)

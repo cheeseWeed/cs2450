@@ -8,6 +8,8 @@ Date::Date(){
 	month = 10;
 	day = 21;
 	year = 2015;
+	addSeconds = 60 * 60 * 24;
+	timer = 1445401740;
 }
 
 Date& Date::Instance() {
@@ -23,7 +25,7 @@ void Date::AdvanceDate(){
 	try{
 		daysPlus = stoi(number);
 	}
-	catch (exception){
+	catch (exception &e){
 		AdvanceDate();
 	}
 	/*while(!(cin>>daysPlus)){
@@ -34,7 +36,7 @@ void Date::AdvanceDate(){
 		fflush(stdin);*/
 		//AdvanceDate();
 	//}
-	cout << daysPlus;
+	//cout << daysPlus;
 	DaysCheck();
 	AdvanceDayMonthYear(daysPlus);
 	//cin.ignore();
@@ -73,11 +75,13 @@ void Date::AdvanceDayMonthYear(int plusDays)
 		while (day < daysInMonth && plusDays >0){
 			day++;
 			plusDays--;
+			timer = timer + addSeconds;
 		}
 		if (plusDays > 0 && month < 12){
 			month++;
 			day = 1;
 			plusDays--;
+			timer = timer + addSeconds;
 			DaysCheck();
 		}
 		if (day == daysInMonth && plusDays> 0 && month == 12){
@@ -85,12 +89,18 @@ void Date::AdvanceDayMonthYear(int plusDays)
 			month = 1;
 			day = 1;
 			plusDays--;
+			timer = timer + addSeconds;
 		}
 	}
-	cout <<"today is now: "<<month << "/" <<day<< "/" << year << endl;
+	//cout <<"today is now: "<<month << "/" <<day<< "/" << year << endl;
 }
 
-string Date::TodayIs(){
+string Date::TodaysDateIs(){
 	string today = to_string(day) + "/" + to_string(month) + "/" + to_string(year);
 	return (today);
+}
+time_t Date::TodayIs(){
+
+	TodaysDateIs();
+	return (timer);
 }

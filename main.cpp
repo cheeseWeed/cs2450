@@ -131,7 +131,6 @@ void checkin()
 void mainMenu()
 {
     bool quit = false;
-
     while (!quit)
     {
         try

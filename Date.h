@@ -4,12 +4,15 @@
 #include <memory>
 #include <string>
 #include <iostream>
+#include <time.h>
 
 class Date{
 
 private:
     static std::unique_ptr<Date> instance;
-
+	time_t timer;
+	long int timestamp;
+	int addSeconds;
 	int day;
 	int month;
 	int year;
@@ -19,10 +22,10 @@ private:
 
     Date();
 public:
-
+	std::string TodaysDateIs();
     static Date& Instance();
 	void AdvanceDate();
-	std::string TodayIs();
+	time_t TodayIs();
 
 };
 
