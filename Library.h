@@ -33,7 +33,17 @@ public:
     
     void listAllItems(std::ostream &os);
 
+    void listAllPatrons(std::ostream &os);
+
+    void listAvailableItems(std::ostream &os);
+
+    void listOverdueItems(std::ostream &os);
+
     void listPatronItems(std::ostream &os, int patronId);
+
+    bool validPatronId(int patronId);
+
+    bool validItemId(int itemId);
     
     CheckOutStatus checkout(int patronId, int itemId);
 

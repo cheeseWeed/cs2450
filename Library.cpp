@@ -117,11 +117,47 @@ void Library::listAllItems(ostream &os) {
     }
 }
 
+void Library::listAllPatrons(ostream &os)
+{
+    for (auto &patron: patrons)
+    {
+        os << *patron;
+    }
+}
+
+void Library::listAvailableItems(ostream &os)
+{
+    for (auto &item: items)
+    {
+        if (item->getPatronId() == 0)
+            os << *item;
+    }
+}
+
+void Library::listOverdueItems(ostream &os)
+{
+    for (auto &item: items)
+    {
+        if (item->isOverdue())
+            os << *item;
+    }
+}
+
 void Library::listPatronItems(ostream &os, int patronId)
 {
     auto &patron = getPatron(patronId);
 
     patron->listItems(os);
+}
+
+bool Library::validPatronId(int patronId)
+{
+    return any_of(patrons.begin(), patrons.end(), [patronId](Unique_patron &p){ return p->getId() == patronId;});
+}
+
+bool Library::validItemId(int itemId)
+{
+    return any_of(items.begin(), items.end(), [itemId](Shared_item &i){ return i->getId() == itemId;});
 }
 
 CheckOutStatus Library::checkout(int patronId, int itemId)

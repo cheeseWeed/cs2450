@@ -45,6 +45,8 @@ public:
 
     ItemType getType() { return type; }
 
+    bool isOverdue();
+
     static void printColumns(std::ostream &os);
 
     std::string formattedDueDate();

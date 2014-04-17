@@ -17,6 +17,13 @@ int Item::getId()
     return id;
 }
 
+bool Item::isOverdue()
+{
+    time_t now = time(NULL);
+
+    return patron_id != 0 && due_date < now;
+}
+
 void Item::printColumns(std::ostream &os)
 {
     os << setw(COLUMN_WIDTH_SMALL) << left << "ID" << setw(COLUMN_WIDTH_LARGE) << left << "Title" << setw(COLUMN_WIDTH_SMALL) << left << "Type" << setw(COLUMN_WIDTH_LARGE) << left << "Due Date" << setw(COLUMN_WIDTH_SMALL) << left << "Patron" << endl;

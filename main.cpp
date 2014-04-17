@@ -8,24 +8,67 @@
 
 using namespace std;
 
+class user_abort : public runtime_error
+{
+public: 
+    
+    user_abort() : runtime_error("User aborted operation") {}
+};
+
 Library *lib;
 
 int requestPatronId()
 {
-    int pid;
+    int pid = -1;
 
-    cout << "Please enter the Patron's ID: ";
-    cin >> pid;
+    while (pid < 0)
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
+
+        cout << "Please enter the Patron's ID (-1: list, -2: cancel): ";
+        if (cin >> pid)
+        {
+            if (pid == -1) {
+                lib->listAllPatrons(cout);
+            }
+            else if (pid == -2) {
+                throw user_abort();
+            }
+            else if (!lib->validPatronId(pid)) {
+                cout << "Invalid Patron ID specified." << endl;
+                pid = -1;
+            }
+        }
+    }
 
     return pid;
 }
 
 int requestItemId()
 {
-    int iid;
+    int iid = -1;
 
-    cout << "Please enter the Item's ID: ";
-    cin >> iid;
+    while (iid < 0)
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
+
+        cout << "Please enter the Item's ID (-1: list, -2: cancel): ";
+        if(cin >> iid)
+        {
+            if (iid == -1) {
+                lib->listAvailableItems(cout);
+            }
+            else if (iid == -2) {
+                throw user_abort();
+            }
+            else if (!lib->validItemId(iid)) {
+                cout << "Invalid Item ID specified." << endl;
+                iid = -1;
+            }
+        }
+    }
 
     return iid;
 }
@@ -91,48 +134,56 @@ void mainMenu()
 
     while (!quit)
     {
-        cout << endl << "Main Menu:" << endl;
-        cout << tab << "1) Checkout a book." << endl;
-        cout << tab << "2) Checkin a book." << endl;
-        cout << tab << "3) List overdue books." << endl;
-        cout << tab << "4) List patron's books." << endl;
-        cout << tab << "5) List all books and media." << endl;
-        cout << tab << "6) Advance the date." << endl;
-        cout << tab << "q) Quit." << endl << endl;
-        
-        char input = '0';
+        try
+        {
+            cout << endl << "Main Menu:" << endl;
+            cout << tab << "1) Checkout a book." << endl;
+            cout << tab << "2) Checkin a book." << endl;
+            cout << tab << "3) List overdue books." << endl;
+            cout << tab << "4) List patron's books." << endl;
+            cout << tab << "5) List all books and media." << endl;
+            cout << tab << "6) Advance the date." << endl;
+            cout << tab << "q) Quit." << endl << endl;
+            
+            char input = '0';
 
-        cin >> input;
-        
-        switch (input) {
-            case '1':
-                checkout();
-                break;
-            case '2':
-                checkin();
-                break;
-            case '3':
-                break;
-            case '4':
-                listPatronsBooks();
-                break;
-            case '5':
-                lib->listAllItems(cout);
-                break;
-            case '6':
-                Date::Instance().AdvanceDate();
-                break;
-            case 'q':
-            case 'Q':
-                quit = true;
-                break;
-            default:
-                cout << "Please choose an option 1-6. or q" << endl;
-                break;
+            cin >> input;
+            
+            switch (input) {
+                case '1':
+                    checkout();
+                    break;
+                case '2':
+                    checkin();
+                    break;
+                case '3':
+                    lib->listOverdueItems(cout);
+                    break;
+                case '4':
+                    listPatronsBooks();
+                    break;
+                case '5':
+                    lib->listAllItems(cout);
+                    break;
+                case '6':
+                    Date::Instance().AdvanceDate();
+                    break;
+                case 'q':
+                case 'Q':
+                    quit = true;
+                    break;
+                default:
+                    cout << "Please choose an option 1-6. or q" << endl;
+                    break;
+            }
+
+            cin.clear();
+            cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
         }
-
-        cin.clear();
-        cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
+        catch (exception &ex)
+        {
+            cout << ex.what();
+        }
     }
 };
 
