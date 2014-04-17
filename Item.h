@@ -33,10 +33,16 @@ class Item {
     int type;
     time_t due_date;
     int patron_id; // patron who checked out book
+
+    Item() = default;
+
+    Item(const Item&) = delete;
+
+    Item& operator=(const Item&) = delete;
     
 public:
 
-    int getId() { return id; }
+    int getId();
 
     int getPatronId() { return patron_id; }
 
@@ -48,7 +54,7 @@ public:
 
     bool writeToStream(std::ostream &os);
 
-    CheckOutStatus checkOut(Patron& p);
+    CheckOutStatus checkOut(Unique_patron& p);
 
     CheckInStatus checkIn(Patron p);
     

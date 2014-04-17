@@ -21,8 +21,8 @@ class Library {
     std::vector<Unique_patron> patrons;
     std::vector<Shared_item> items;
 
-    const Unique_patron& getPatron(int id);
-    Shared_item& getItemPtr(int id);
+    Unique_patron& getPatron(int patronId);
+    Shared_item& getItem(int itemId);
     
     void load();
     void save();

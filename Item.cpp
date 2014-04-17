@@ -11,6 +11,12 @@
 
 using namespace std;
 
+
+int Item::getId()
+{
+    return id;
+}
+
 void Item::printColumns(std::ostream &os)
 {
     os << setw(COLUMN_WIDTH_SMALL) << left << "ID" << setw(COLUMN_WIDTH_LARGE) << left << "Title" << setw(COLUMN_WIDTH_SMALL) << left << "Type" << setw(COLUMN_WIDTH_LARGE) << left << "Due Date" << setw(COLUMN_WIDTH_SMALL) << left << "Patron" << endl;
@@ -64,11 +70,11 @@ bool Item::writeToStream(std::ostream &os)
     return os.good();
 }
 
-CheckOutStatus Item::checkOut(Patron& p) 
+CheckOutStatus Item::checkOut(Unique_patron& p) 
 {
-    p.addItem(self);
+    p->addItem(self);
 
-    patron_id = p.getId();
+    patron_id = p->getId();
 
 //enum ItemType { ItemTypeAdultBook, ItemTypeChildBook, ItemTypeVideoTape, ItemTypeDVD };
     due_date = time(NULL) + 2 * 24 * 60 * 60;

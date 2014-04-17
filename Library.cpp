@@ -28,7 +28,7 @@ Library::~Library()
     this->save();
 }
 
-const Unique_patron& Library::getPatron(int patronId)
+Unique_patron& Library::getPatron(int patronId)
 {
     auto patronIter = find_if(patrons.begin(), patrons.end(), [patronId](Unique_patron& p){ return p->getId() == patronId;});
     
@@ -38,7 +38,7 @@ const Unique_patron& Library::getPatron(int patronId)
     return *patronIter;
 }
 
-Shared_item& Library::getItemPtr(int itemId)
+Shared_item& Library::getItem(int itemId)
 {
     auto itemIter = find_if(items.begin(), items.end(), [itemId](Shared_item& i){ return i->getId() == itemId;});
 
@@ -126,7 +126,10 @@ void Library::listPatronItems(ostream &os, int patronId)
 
 bool Library::checkout(int patronId, int itemId)
 {
+    auto &patron = getPatron(patronId);
+    auto &item = getItem(itemId);
 
+    item->checkOut(patron);
 
     return true;
 }
