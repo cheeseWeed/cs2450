@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include "Library.h"
 #include "Date.h"
+#include "Constants.h"
 
 using namespace std;
 
@@ -41,7 +42,28 @@ void checkout()
     int pid = requestPatronId();
     int iid = requestItemId();
 
-    lib->checkout(pid, iid);
+    CheckOutStatus status = lib->checkout(pid, iid);
+
+    switch (status)
+    {
+        case CheckOutStatusSuccess:
+            cout << "Checkout completed successfully." << endl;
+            break;
+        case CheckOutStatusTooManyBooks:
+            cout << "Checkout failed -- Patron has exceeded his/her check out limit." << endl;
+            break;
+        case CheckOutStatusAdultContent:
+            cout << "Checkout failed -- Patron is not allowed to check out adult content." << endl;
+            break;
+        case CheckOutStatusAlreadyCheckedOut:
+            cout << "Checkout failed -- The specified item is already checked out." << endl;
+            break;
+        case CheckOutStatusError:
+            cout << "Checkout failed -- An unknown error has occurred." << endl;
+            break;
+        default:
+            throw logic_error("Invalid CheckOutStatus Returned.");
+    }
 }
 
 void mainMenu()

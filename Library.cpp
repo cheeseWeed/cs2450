@@ -124,14 +124,12 @@ void Library::listPatronItems(ostream &os, int patronId)
     patron->listItems(os);
 }
 
-bool Library::checkout(int patronId, int itemId)
+CheckOutStatus Library::checkout(int patronId, int itemId)
 {
     auto &patron = getPatron(patronId);
     auto &item = getItem(itemId);
 
-    item->checkOut(patron);
-
-    return true;
+    return item->checkOut(patron);
 }
 
 bool Library::checkin(int patrongId, int itemId)

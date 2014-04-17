@@ -12,13 +12,10 @@
 #include <iostream>
 #include <iomanip>
 #include "Patron.h"
+#include "Constants.h"
 
 #define COLUMN_WIDTH_SMALL 7
 #define COLUMN_WIDTH_LARGE 20
-
-enum ItemType { ItemTypeAdultBook, ItemTypeChildBook, ItemTypeVideoTape, ItemTypeDVD };
-enum CheckInStatus { CheckInStatusOnTime, CheckInStatusLate, CheckInStatusError };
-enum CheckOutStatus { CheckOutStatusSuccess, CheckOutStatusTooManyBooks, CheckOutStatusAdultContent, CheckOutStatusError };
 
 class Item;
 
@@ -30,7 +27,7 @@ class Item {
 
     int id;
     std::string title;
-    int type;
+    ItemType type;
     time_t due_date;
     int patron_id; // patron who checked out book
 
@@ -45,6 +42,8 @@ public:
     int getId();
 
     int getPatronId() { return patron_id; }
+
+    ItemType getType() { return type; }
 
     static void printColumns(std::ostream &os);
 

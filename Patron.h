@@ -14,6 +14,7 @@
 #include <string>
 #include <memory>
 #include "HelperMethods.h"
+#include "Constants.h"
 
 class Patron;
 class Item;
@@ -44,7 +45,7 @@ public:
 
     bool writeToStream(std::ostream &os);
 
-    void addItem(std::shared_ptr<Item> item);
+    CheckOutStatus addItem(std::shared_ptr<Item> item);
 
     void listItems(std::ostream& os);
     

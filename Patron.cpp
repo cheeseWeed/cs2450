@@ -45,9 +45,24 @@ Patron* Patron::readFromStream(std::istream &is)
     return p;
 }
 
-void Patron::addItem(shared_ptr<Item> item)
+CheckOutStatus Patron::addItem(shared_ptr<Item> item)
 {
+    if (child)
+    {
+        if(item->getType() != ItemTypeChildBook)
+            return CheckOutStatusAdultContent;
+
+        if(items.size() > 2)
+            return CheckOutStatusTooManyBooks;
+    }
+    else if(items.size() > 5)
+    {
+        return CheckOutStatusTooManyBooks;
+    }
+
     items.push_back(item);
+
+    return CheckOutStatusSuccess;
 }
 
 bool Patron::writeToStream(std::ostream &os)
@@ -60,5 +75,5 @@ bool Patron::writeToStream(std::ostream &os)
 void Patron::listItems(ostream& os)
 {
     for (auto &item: items)
-        os << *item << endl;
+        os << *item;
 }

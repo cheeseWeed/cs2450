@@ -35,7 +35,8 @@ public:
 
     void listPatronItems(std::ostream &os, int patronId);
     
-    bool checkout(int patronId, int itemId);
+    CheckOutStatus checkout(int patronId, int itemId);
+
     bool checkin(int patronId, int itemId);
 };
 

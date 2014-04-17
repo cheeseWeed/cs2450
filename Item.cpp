@@ -50,7 +50,7 @@ Shared_item Item::readFromStream(std::istream &is)
     item->title = input.c_str();
     
     getline(is, input, ',');
-    item->type = atoi(input.c_str());
+    item->type = (ItemType)atoi(input.c_str());
     
     getline(is, input, ',');
     item->due_date = atoi(input.c_str());
@@ -72,12 +72,37 @@ bool Item::writeToStream(std::ostream &os)
 
 CheckOutStatus Item::checkOut(Unique_patron& p) 
 {
-    p->addItem(self);
+    if (patron_id != 0)
+        return CheckOutStatusAlreadyCheckedOut;
+
+    CheckOutStatus status = p->addItem(self);
+
+    if (status != CheckOutStatusSuccess)
+        return status;
 
     patron_id = p->getId();
+    
+    int days = 0;
 
-//enum ItemType { ItemTypeAdultBook, ItemTypeChildBook, ItemTypeVideoTape, ItemTypeDVD };
-    due_date = time(NULL) + 2 * 24 * 60 * 60;
+    switch (type)
+    {
+        case ItemTypeAdultBook:
+            days = 2 * 7;
+            break;
+        case ItemTypeChildBook:
+            days = 7;
+            break;
+        case ItemTypeVideoTape:
+            days = 3;
+            break;
+        case ItemTypeDVD:
+            days = 2;
+            break;
+        default:
+            throw logic_error("Item Type Is NOT recognized.");
+    }
+
+    due_date = time(NULL) + days * 24 * 60 * 60;
 
     return CheckOutStatusSuccess;
 }
