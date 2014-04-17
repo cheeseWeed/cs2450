@@ -21,6 +21,8 @@ void Date::AdvanceDate(){
 	cout <<"How many days would you like to advance:  ";
 	int daysPlus = 0;
 	string number;
+	cin.clear(40, '/n');
+	cin.ignore();
 	getline(cin, number);
 	try{
 		daysPlus = stoi(number);
