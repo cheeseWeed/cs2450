@@ -11,7 +11,6 @@
 
 using namespace std;
 
-
 int Item::getId()
 {
     return id;
@@ -62,8 +61,6 @@ Shared_item Item::readFromStream(std::istream &is)
     
     getline(is, input);
     item->patron_id = atoi(input.c_str());
-
-    item->self = item;
     
     return item;
 }
@@ -80,7 +77,7 @@ CheckOutStatus Item::checkOut(Unique_patron& p)
     if (patron_id != 0)
         return CheckOutStatusAlreadyCheckedOut;
 
-    CheckOutStatus status = p->addItem(self);
+    CheckOutStatus status = p->addItem(shared_from_this());
 
     if (status != CheckOutStatusSuccess)
         return status;
@@ -117,7 +114,7 @@ CheckInStatus Item::checkIn(Unique_patron& p)
     if (patron_id == 0)
         return CheckInStatusAlreadyCheckedIn;
 
-    CheckInStatus status = p->removeItem(self->id);
+    CheckInStatus status = p->removeItem(id);
 
     if (status != CheckInStatusSuccess)
         return status;

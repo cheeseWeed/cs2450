@@ -21,10 +21,8 @@ class Item;
 
 typedef std::shared_ptr<Item> Shared_item;
 
-class Item {
-
-    Shared_item self;
-
+class Item : public std::enable_shared_from_this<Item>
+{
     int id;
     std::string title;
     ItemType type;
