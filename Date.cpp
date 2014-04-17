@@ -17,18 +17,22 @@ Date& Date::Instance() {
 }
 
 void Date::AdvanceDate(){
-	cout << "\ntoday is: " << month << "/" << day << "/" << year << endl;
+	
+    cout << "\ntoday is: " << month << "/" << day << "/" << year << endl;
 	cout <<"How many days would you like to advance:  ";
-	int daysPlus = 0;
-	string number;
-	getline(cin, number);
-	try{
-		daysPlus = stoi(number);
-	}
-	catch (exception &e){
-		AdvanceDate();
-	}
-	/*while(!(cin>>daysPlus)){
+	
+    int daysPlus = 0;
+	
+    if ( cin >> daysPlus ) {
+        DaysCheck();
+        AdvanceDayMonthYear(daysPlus);
+    } else {
+        cin.clear();
+        cin.ignore(INT_MAX, '\n');
+        AdvanceDate();
+    }
+    
+    /*while(!(cin>>daysPlus)){
 		cout <<daysPlus;
 		cout << "You must enter a real number"<<endl;
 		cin.clear(40,'\n');
@@ -37,8 +41,7 @@ void Date::AdvanceDate(){
 		//AdvanceDate();
 	//}
 	//cout << daysPlus;
-	DaysCheck();
-	AdvanceDayMonthYear(daysPlus);
+	
 	//cin.ignore();
 	//cin.clear(40, '\n');
 
