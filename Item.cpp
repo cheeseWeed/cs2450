@@ -11,7 +11,7 @@
 
 using namespace std;
 
-Item* Item::readFromStream(std::istream &is)
+Shared_item Item::readFromStream(std::istream &is)
 {
     char c;
     is.get(c);
@@ -21,7 +21,7 @@ Item* Item::readFromStream(std::istream &is)
         return nullptr;
     
     string input;
-    Item *item = new Item();
+    Shared_item item{ new Item()};
     
     getline(is, input, ',');
     item->id = atoi(input.c_str());
@@ -37,6 +37,8 @@ Item* Item::readFromStream(std::istream &is)
     
     getline(is, input);
     item->patron_id = atoi(input.c_str());
+
+    item->self = item;
     
     return item;
 }
@@ -48,8 +50,16 @@ bool Item::writeToStream(std::ostream &os)
     return os.good();
 }
 
-CheckOutStatus Item::checkOut(Patron p) {
-    return CheckOutStatusError;
+CheckOutStatus Item::checkOut(Patron& p) 
+{
+    p.addItem(self);
+
+    patron_id = p.getId();
+
+//enum ItemType { ItemTypeAdultBook, ItemTypeChildBook, ItemTypeVideoTape, ItemTypeDVD };
+    due_date = time(NULL) + 2 * 24 * 60 * 60;
+
+    return CheckOutStatusSuccess;
 }
 
 CheckInStatus Item::checkIn(Patron p) {

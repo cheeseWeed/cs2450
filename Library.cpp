@@ -9,8 +9,10 @@
 #define PAT_ID "#PAT"
 #define ITEM_ID "#ITEM"
 
-#include "Library.h"
+#include <iostream>
+#include <algorithm>
 #include <stdexcept>
+#include "Library.h"
 
 using namespace std;
 
@@ -24,6 +26,26 @@ Library::Library(string aFilename)
 Library::~Library()
 {
     this->save();
+}
+
+const Unique_patron& Library::getPatron(int patronId)
+{
+    auto patronIter = find_if(patrons.begin(), patrons.end(), [patronId](Unique_patron& p){ return p->getId() == patronId;});
+    
+    if (patronIter == patrons.end())
+        throw logic_error("Invalid patron identifier specified.");
+
+    return *patronIter;
+}
+
+Shared_item& Library::getItemPtr(int itemId)
+{
+    auto itemIter = find_if(items.begin(), items.end(), [itemId](Shared_item& i){ return i->getId() == itemId;});
+
+    if (itemIter == items.end())
+        throw logic_error("Invalid item identifier specified.");
+
+    return *itemIter;
 }
 
 //#pragma mark - Private Methods
@@ -40,7 +62,7 @@ void Library::load()
         Patron *p = Patron::readFromStream(file);
         if (p == nullptr)
             break;
-        
+
         patrons.push_back( Unique_patron(p) );
     }
     
@@ -49,15 +71,23 @@ void Library::load()
         throw runtime_error("ERROR: file not correct format.");
     }
     while ( file ) {
-        Item *item = Item::readFromStream(file); // TODO: How do we determine which object type to use?
+        Shared_item item = Item::readFromStream(file); 
         if (item == nullptr)
             break;
         
-        items.push_back( Unique_item(item) );
+        items.push_back( item );
+
+        int pid;
+        if ((pid = item->getPatronId()) != 0)
+        {
+            auto &patron = getPatron(pid);
+            patron->addItem(item);
+        }
     }
     
     file.close();
 }
+
 void Library::save()
 {
     fstream file(filename, ios_base::trunc);
@@ -83,4 +113,23 @@ void Library::listAllItems(ostream &os) {
     for (auto &item: items) {
         os << *item << endl;
     }
+}
+
+void Library::listPatronItems(ostream &os, int patronId)
+{
+    auto &patron = getPatron(patronId);
+
+    patron->listItems(os);
+}
+
+bool Library::checkout(int patronId, int itemId)
+{
+
+
+    return true;
+}
+
+bool Library::checkin(int patrongId, int itemId)
+{
+    return true;
 }

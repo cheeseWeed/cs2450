@@ -18,19 +18,30 @@ enum CheckOutStatus { CheckOutStatusSuccess, CheckOutStatusTooManyBooks, CheckOu
 
 class Item;
 
-typedef std::unique_ptr<Item> Unique_item;
+typedef std::shared_ptr<Item> Shared_item;
 
 class Item {
+
+    Shared_item self;
+
     int id;
     std::string title;
     int type;
-    int due_date;
+    time_t due_date;
     int patron_id; // patron who checked out book
     
 public:
-    static Item* readFromStream(std::istream &is);
+
+    int getId() { return id; }
+
+    int getPatronId() { return patron_id; }
+
+    static Shared_item readFromStream(std::istream &is);
+
     bool writeToStream(std::ostream &os);
-    virtual CheckOutStatus checkOut(Patron p);
+
+    CheckOutStatus checkOut(Patron& p);
+
     CheckInStatus checkIn(Patron p);
     
     friend std::ostream& operator<<(std::ostream &os, Item &item)
@@ -40,3 +51,4 @@ public:
 };
 
 #endif /* defined(__Library__Item__) */
+

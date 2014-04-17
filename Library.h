@@ -9,32 +9,34 @@
 #ifndef __Library__Library__
 #define __Library__Library__
 
-#include <iostream>
+#include <iosfwd>
 #include <fstream>
 #include <string>
 #include <vector>
 #include "Patron.h"
 #include "Item.h"
 
-using namespace std;
-
 class Library {
-    string filename;
-    vector<Unique_patron> patrons;
-    vector<Unique_item> items;
+    std::string filename;
+    std::vector<Unique_patron> patrons;
+    std::vector<Shared_item> items;
+
+    const Unique_patron& getPatron(int id);
+    Shared_item& getItemPtr(int id);
     
-private:
     void load();
     void save();
     
 public:
-    explicit Library(string aFilename);
+    explicit Library(std::string aFilename);
     ~Library();
     
-    void listAllItems(ostream &os);
+    void listAllItems(std::ostream &os);
+
+    void listPatronItems(std::ostream &os, int patronId);
     
-    bool checkout(Patron patron, Item item);
-    bool checkin(Patron patron, Item item);
+    bool checkout(int patronId, int itemId);
+    bool checkin(int patronId, int itemId);
 };
 
 #endif /* defined(__Library__Library__) */

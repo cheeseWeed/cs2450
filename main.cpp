@@ -8,6 +8,23 @@ using namespace std;
 
 Library *lib;
 
+int requestPatronId()
+{
+    int pid;
+
+    cout << "Please enter the Patron's ID: ";
+    cin >> pid;
+
+    return pid;
+}
+
+void listPatronsBooks()
+{
+    int pid = requestPatronId();
+
+    lib->listPatronItems(cout, pid);
+}
+
 void mainMenu()
 {
     cout << "Main Menu:" << endl;
@@ -30,14 +47,14 @@ void mainMenu()
         case '3':
             break;
         case '4':
+            listPatronsBooks();
             break;
 		case '5':
-					 lib->listAllItems(cout);
-					 break;
+			 lib->listAllItems(cout);
+			 break;
 		case '6':
-					 Date::Instance().AdvanceDate();
-					 break;
-		
+			 Date::Instance().AdvanceDate();
+			 break;
         case 'q':
         case 'Q':
             return;

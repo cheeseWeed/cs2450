@@ -6,11 +6,17 @@
 //  Copyright (c) 2014 Kody Holman. All rights reserved.
 //
 
+#include <cstdlib>
+#include <iostream>
 #include "Patron.h"
-#include <stdlib.h>
-
+#include "Item.h"
 
 using namespace std;
+
+int Patron::getId()
+{
+    return id;
+}
 
 Patron* Patron::readFromStream(std::istream &is)
 {
@@ -35,8 +41,13 @@ Patron* Patron::readFromStream(std::istream &is)
     
     getline(is, input);
     p->child = atoi(input.c_str()) == 1;
-        
+
     return p;
+}
+
+void Patron::addItem(shared_ptr<Item> item)
+{
+    items.push_back(item);
 }
 
 bool Patron::writeToStream(std::ostream &os)
@@ -44,4 +55,10 @@ bool Patron::writeToStream(std::ostream &os)
     os << id << ',' << first << ',' << last << ',' << child << std::endl;
     
     return os.good();
+}
+
+void Patron::listItems(ostream& os)
+{
+    for (auto &item: items)
+        os << *item << endl;
 }
