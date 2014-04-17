@@ -37,7 +37,7 @@ public:
     
     CheckOutStatus checkout(int patronId, int itemId);
 
-    bool checkin(int patronId, int itemId);
+    CheckInStatus checkin(int itemId);
 };
 
 #endif /* defined(__Library__Library__) */

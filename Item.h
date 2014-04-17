@@ -55,7 +55,7 @@ public:
 
     CheckOutStatus checkOut(Unique_patron& p);
 
-    CheckInStatus checkIn(Patron p);
+    CheckInStatus checkIn(Unique_patron& p);
     
     friend std::ostream& operator<<(std::ostream &os, Item &item)
     {

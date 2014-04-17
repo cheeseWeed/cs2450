@@ -107,6 +107,20 @@ CheckOutStatus Item::checkOut(Unique_patron& p)
     return CheckOutStatusSuccess;
 }
 
-CheckInStatus Item::checkIn(Patron p) {
-    return CheckInStatusError;
+CheckInStatus Item::checkIn(Unique_patron& p) 
+{
+    if (patron_id == 0)
+        return CheckInStatusAlreadyCheckedIn;
+
+    CheckInStatus status = p->removeItem(self->id);
+
+    if (status != CheckInStatusSuccess)
+        return status;
+
+    patron_id = 0;
+
+    if (due_date < time(NULL))
+        return CheckInStatusLate;
+
+    return CheckInStatusSuccess;
 }

@@ -132,7 +132,16 @@ CheckOutStatus Library::checkout(int patronId, int itemId)
     return item->checkOut(patron);
 }
 
-bool Library::checkin(int patrongId, int itemId)
+CheckInStatus Library::checkin(int itemId)
 {
-    return true;
+    auto &item = getItem(itemId);
+
+    int patronId = item->getPatronId();
+
+    if (patronId == 0)
+        return CheckInStatusAlreadyCheckedIn;
+
+    auto &patron = getPatron(patronId);
+
+    return item->checkIn(patron);
 }

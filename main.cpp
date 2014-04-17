@@ -58,11 +58,30 @@ void checkout()
         case CheckOutStatusAlreadyCheckedOut:
             cout << "Checkout failed -- The specified item is already checked out." << endl;
             break;
-        case CheckOutStatusError:
-            cout << "Checkout failed -- An unknown error has occurred." << endl;
-            break;
         default:
             throw logic_error("Invalid CheckOutStatus Returned.");
+    }
+}
+
+void checkin()
+{
+    int iid = requestItemId();
+
+    CheckInStatus status = lib->checkin(iid);
+
+    switch (status)
+    {
+        case CheckInStatusSuccess:
+            cout << "Checkin completed successfully." << endl;
+            break;
+        case CheckInStatusLate:
+            cout << "Warning: Item was returned late." << endl;
+            break;
+        case CheckInStatusAlreadyCheckedIn:
+            cout << "Checkin failed -- The specified item is not checked out." << endl;
+            break;
+        default:
+            throw logic_error("Invalid CheckInStatus Returned.");
     }
 }
 
@@ -90,6 +109,7 @@ void mainMenu()
                 checkout();
                 break;
             case '2':
+                checkin();
                 break;
             case '3':
                 break;

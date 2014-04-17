@@ -47,6 +47,8 @@ public:
 
     CheckOutStatus addItem(std::shared_ptr<Item> item);
 
+    CheckInStatus removeItem(int itemId);
+
     void listItems(std::ostream& os);
     
     friend std::ostream& operator<<(std::ostream &os, Patron &p)

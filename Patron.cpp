@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Kody Holman. All rights reserved.
 //
 
+#include <algorithm>
 #include <cstdlib>
 #include <iostream>
 #include "Patron.h"
@@ -64,6 +65,19 @@ CheckOutStatus Patron::addItem(shared_ptr<Item> item)
 
     return CheckOutStatusSuccess;
 }
+
+CheckInStatus Patron::removeItem(int itemId)
+{
+    auto itemIter = find_if(items.begin(), items.end(), [itemId](Shared_item& item){ return item->getId() == itemId; });
+
+    if (itemIter == items.end())
+        throw logic_error("User does not have the specified item checked out.");
+
+    items.erase(itemIter);
+
+    return CheckInStatusSuccess;
+}
+
 
 bool Patron::writeToStream(std::ostream &os)
 {
