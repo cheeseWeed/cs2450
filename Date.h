@@ -12,12 +12,12 @@ private:
     static std::unique_ptr<Date> instance;
 	time_t timer;
 	long int timestamp;
-	int addSeconds;
+	int addSecondsInDay;
 	int day;
 	int month;
 	int year;
 	int daysInMonth;
-	void DaysCheck();
+	void DaysCheck(int,int);
 	void AdvanceDayMonthYear(int);
 
     Date();
@@ -26,6 +26,7 @@ public:
     static Date& Instance();
 	void AdvanceDate();
 	time_t TodayIs();
+	std::string convertTime_tToString(time_t);
 
 };
 

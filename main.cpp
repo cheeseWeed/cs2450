@@ -227,6 +227,7 @@ LibraryCommand getCommand() {
         } else if (command.find("quit") != string::npos || command.find("q") != string::npos) {
             return LibraryCommandQuit;
         } else {
+			cout << "\n" << Date::Instance().convertTime_tToString(3502656000) << endl;
             cout << "Please enter a valid command." << endl;
             print_help();
             return LibraryCommandHelp;
