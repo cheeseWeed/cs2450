@@ -13,6 +13,7 @@
 #include <iomanip>
 #include "Patron.h"
 #include "Constants.h"
+#include "Date.h"
 
 #define COLUMN_WIDTH_SMALL 7
 #define COLUMN_WIDTH_LARGE 20
@@ -47,8 +48,6 @@ public:
 
     static void printColumns(std::ostream &os);
 
-    std::string formattedDueDate();
-
     static Shared_item readFromStream(std::istream &is);
 
     bool writeToStream(std::ostream &os);
@@ -59,7 +58,22 @@ public:
     
     friend std::ostream& operator<<(std::ostream &os, Item &item)
     {
-        return os << std::setw(COLUMN_WIDTH_SMALL) << std::left << item.id << std::setw(COLUMN_WIDTH_LARGE) << std::left << item.title << std::setw(COLUMN_WIDTH_SMALL) << std::left << item.type << std::setw(COLUMN_WIDTH_LARGE) << std::left << item.formattedDueDate() << std::setw(COLUMN_WIDTH_SMALL) << std::left << item.patron_id << std::endl;
+        os << std::setw(COLUMN_WIDTH_SMALL) << std::left << item.id;
+        
+        int titleLength = COLUMN_WIDTH_LARGE+COLUMN_WIDTH_LARGE+COLUMN_WIDTH_SMALL;
+        std::string title = item.title;
+        if (title.length() > titleLength-1) {
+            title = title.substr(0, titleLength-4) + "...";
+        }
+        os << std::setw(titleLength) << std::left << title;
+        
+        os << std::setw(COLUMN_WIDTH_SMALL) << std::left << item.type;
+        
+        os << std::setw(COLUMN_WIDTH_LARGE) << std::left << Date::Instance().convertTime_tToString(item.due_date);
+        
+        os << std::setw(COLUMN_WIDTH_SMALL) << std::left << item.patron_id;
+        
+        return os << std::endl;
     }
 };
 
