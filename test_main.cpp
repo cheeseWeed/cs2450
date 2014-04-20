@@ -156,7 +156,11 @@ int main(int argc, const char * argv[]) {
 
 		assert("test checkin fail", true);
 	}
-
+	//cout << Date::Instance().TodaysDateIs() << endl;
+	//cout<<Date::Instance().convertTime_tToString(Date::Instance().TodayIs())<<endl;
+	if (Date::Instance().TodaysDateIs() == Date::Instance().convertTime_tToString(Date::Instance().TodayIs())){
+		assert("Convert Date Time ", true);
+	}
 	cout << endl;
 
 	system("PAUSE");
