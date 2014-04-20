@@ -11,10 +11,14 @@
 
 #include <vector>
 #include <iosfwd>
+#include <iomanip>
 #include <string>
 #include <memory>
 #include "HelperMethods.h"
 #include "Constants.h"
+
+#define COLUMN_WIDTH_ID 7
+#define COLUMN_WIDTH_NAME 20
 
 class Patron;
 class Item;
@@ -43,6 +47,8 @@ public:
     
     static Patron* readFromStream(std::istream &is);
 
+    static void printColumns(std::ostream &os);
+
     bool writeToStream(std::ostream &os);
 
     CheckOutStatus addItem(std::shared_ptr<Item> item);
@@ -53,7 +59,15 @@ public:
     
     friend std::ostream& operator<<(std::ostream &os, Patron &p)
     {
-        return os << p.id << tab << p.first << tab << p.last << tab << p.child << std::endl;
+        os << std::setw(COLUMN_WIDTH_ID) << std::left << p.id;
+
+        std::string name = trunc(p.last + ", " + p.first, COLUMN_WIDTH_NAME);
+
+        os << std::setw(COLUMN_WIDTH_NAME) << std::left << name;
+        
+        os << (p.child?"Child":"Adult") << std::endl;
+
+        return os;
     }
 };
 

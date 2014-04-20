@@ -46,6 +46,13 @@ Patron* Patron::readFromStream(std::istream &is)
     return p;
 }
 
+void Patron::printColumns(ostream &os)
+{
+    os << setw(COLUMN_WIDTH_ID) << left << "ID";
+    os << setw(COLUMN_WIDTH_NAME) << left << "Name";
+    os << "Restrictions" << endl;
+}
+
 CheckOutStatus Patron::addItem(shared_ptr<Item> item)
 {
     if (child)
