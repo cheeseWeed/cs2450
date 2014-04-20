@@ -292,7 +292,7 @@ LibraryCommand getCommand() {
         } else if (cmd.text == "list") {
             list(cmd.arg1);
             return LibraryCommandList;
-        } else if (command.find("advance_date") != string::npos) {
+        } else if (cmd.text == "advance_date") {
             advanceDate();
             return LibraryCommandAdvanceDate;
         } else if (cmd.text == "quit" || cmd.text == "q") {
