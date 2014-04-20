@@ -109,7 +109,6 @@ string Date::TodaysDateIs(){
 }
 time_t Date::TodayIs(){
 
-	TodaysDateIs();
 	return (timer);
 }
 string Date::convertTime_tToString(time_t TimeStampSent){
@@ -138,6 +137,6 @@ string Date::convertTime_tToString(time_t TimeStampSent){
 			findStringTimeStamp = findStringTimeStamp + addSecondsInDay;
 		}
 	}
-	timeToString = (to_string(findStringDay)) + "/" + (to_string(findStringMonth)) + "/" + (to_string(findStringYear));
+	timeToString = (to_string(findStringMonth)) + "/" + (to_string(findStringDay)) + "/" + (to_string(findStringYear));
 	return(timeToString);
 }
