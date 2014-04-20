@@ -18,13 +18,14 @@ private:
 	int year;
 	int daysInMonth;
 	void DaysCheck(int,int);
-	void AdvanceDayMonthYear(int);
+	
 
     Date();
 public:
+    void AdvanceDayMonthYear(int);
 	std::string TodaysDateIs();
     static Date& Instance();
-	void AdvanceDate();
+	void AdvanceDate(int);
 	time_t TodayIs();
 	std::string convertTime_tToString(time_t);
 
