@@ -17,39 +17,10 @@ Date& Date::Instance() {
     return *instance;
 }
 
-void Date::AdvanceDate(){
-	
-    cout << "\ntoday is: " << month << "/" << day << "/" << year << endl;
-	cout <<"How many days would you like to advance:  ";
-	
-    int daysPlus = 0;
-	
-    if ( cin >> daysPlus ) {
-        cin.clear();
-        cin.ignore(); // '\n'
-        
-        DaysCheck(month,year);
-        AdvanceDayMonthYear(daysPlus);
-    } else {
-        cin.clear();
-        cin.ignore(INT_MAX, '\n');
-        AdvanceDate();
-    }
-
-	cout << "today is now: " << month << "/" << day << "/" << year << endl;
-    /*while(!(cin>>daysPlus)){
-		cout <<daysPlus;
-		cout << "You must enter a real number"<<endl;
-		cin.clear(40,'\n');
-		cin.ignore(INT_MAX, '\n');
-		fflush(stdin);*/
-		//AdvanceDate();
-	//}
-	//cout << daysPlus;
-	
-	//cin.ignore();
-	//cin.clear(40, '\n');
-
+void Date::AdvanceDate(int days)
+{	
+    DaysCheck(month,year);
+    AdvanceDayMonthYear(days);
 }
 
 //sets number of days in each month
@@ -104,7 +75,7 @@ void Date::AdvanceDayMonthYear(int plusDays)
 }
 
 string Date::TodaysDateIs(){
-	string today = to_string(day) + "/" + to_string(month) + "/" + to_string(year);
+	string today = to_string(month) + "/" + to_string(day) + "/" + to_string(year);
 	return (today);
 }
 time_t Date::TodayIs(){

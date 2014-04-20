@@ -205,6 +205,25 @@ void list(string input) {
     }
 }
 
+
+void advanceDate()
+{
+    cout << "\ntoday is: " << Date::Instance().TodaysDateIs() << endl;
+	cout <<"How many days would you like to advance:  ";
+	
+	string days;
+    
+    if ( getline(cin, days) ) {
+        Date::Instance().AdvanceDate(stoi(days));
+    } else {
+        cin.clear();
+        cin.ignore(INT_MAX, '\n');
+        advanceDate();
+    }
+    
+	cout << "today is now: " << Date::Instance().TodaysDateIs() << endl;
+};
+
 LibraryCommand getCommand() {
     cout << endl << "Enter a command: ";
     
@@ -222,7 +241,7 @@ LibraryCommand getCommand() {
             list(command.substr(command.find(' ')+1));
             return LibraryCommandList;
         } else if (command.find("advance_date") != string::npos) {
-            Date::Instance().AdvanceDate();
+            advanceDate();
             return LibraryCommandAdvanceDate;
         } else if (command.find("quit") != string::npos || command.find("q") != string::npos) {
             return LibraryCommandQuit;
