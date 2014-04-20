@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <limits>
 #include <string>
 #include <stdexcept>
@@ -24,16 +25,78 @@ public:
     user_abort() : runtime_error("User aborted operation") {}
 };
 
+
+struct Command
+{
+    string text;
+    string arg1;
+    string arg2;
+};
+
 Library *lib;
 
-void print_list_help() {
+Command parse_line(string line)
+{
+    Command c;
+    stringstream ss{line};
+    ss >> c.text;
+    ss >> c.arg1;
+    ss >> c.arg2;
+
+    return c;
+}
+
+int parse_id(string text)
+{
+    int result = -1;
+    
+    if (!text.empty())
+    {
+        try
+        {
+            result = stoi(text);
+        }
+        catch (...)
+        {
+            cout << "Invalid id specified: " << text << endl;
+        }
+    }
+
+    return result;
+}
+
+void prompt(string text)
+{
+    cout << "[" << Date::Instance().TodaysDateIs() << "]" << endl;
+    cout << text << ": ";
+}
+
+void print_request_patron_id_help() 
+{
+    cout << tab << "<patron_id> or <command>" << endl;
+    cout << tab << tab << "list (display a list of patrons)" << endl;
+    cout << tab << tab << "help (display this screen)" << endl;
+    cout << tab << tab << "cancel (abort this operation)" << endl;
+}
+
+void print_request_item_id_help() 
+{
+    cout << tab << "<item_id> or <command>" << endl;
+    cout << tab << tab << "list (display a list of items)" << endl;
+    cout << tab << tab << "help (display this screen)" << endl;
+    cout << tab << tab << "cancel (abort this operation)" << endl;
+}
+
+void print_list_help() 
+{
     cout << tab << "list [sub-command]" << endl;
     cout << tab << tab << "items (list all items)" << endl;
     cout << tab << tab << "patron (list all patron items)" << endl;
     cout << tab << tab << "overdue (list all over due items)" << endl;
 }
 
-void print_help() {
+void print_help() 
+{
     cout << endl;
     cout << "usage: <command> [sub-commands, ...]" << endl;
     cout << tab << "checkin [item_id] (Checkin an item)" << endl;
@@ -43,56 +106,58 @@ void print_help() {
     cout << tab << "quit" << endl;
 }
 
-int requestPatronId()
+int request_patron_id() 
 {
-    string patron_id;
+    print_request_patron_id_help();
+
     int pid = -1;
 
     while (pid < 0)
     {
-        cout << "Please enter the Patron's ID (-1: list, -2: cancel): ";
-        if ( getline(cin, patron_id) )
+        prompt("Please enter the Patron's ID");
+
+        string line;
+        if ( getline(cin, line) )
         {
-            pid = stoi(patron_id);
-            
-            if (pid == -1) {
+            Command cmd = parse_line(line);
+
+            if (cmd.text == "help")
+                print_request_patron_id_help();
+            else if (cmd.text == "list")
                 lib->listAllPatrons(cout);
-            }
-            else if (pid == -2) {
+            else if (cmd.text == "cancel")
                 throw user_abort();
-            }
-            else if (!lib->validPatronId(pid)) {
-                cout << "Invalid Patron ID specified." << endl;
-                pid = -1;
-            }
+            else
+                pid = parse_id(cmd.text);
         }
     }
 
     return pid;
 }
 
-int requestItemId(bool checkedOut)
+int request_item_id(bool checkedOut)
 {
-    string item_id;
+    print_request_item_id_help();
+
     int iid = -1;
 
     while (iid < 0)
     {
-        cout << "Please enter the Item's ID (-1: list, -2: cancel): ";
-        if( getline(cin, item_id) )
+        prompt("Please enter the Item's ID");
+        
+        string line;
+        if( getline(cin, line) )
         {
-            iid = stoi(item_id);
-            
-            if (iid == -1) {
+            Command cmd = parse_line(line);
+
+            if (cmd.text == "help")
+                print_request_item_id_help();
+            else if (cmd.text == "list")
                 lib->listItems(cout, checkedOut?ItemSearchCheckedOut:ItemSearchCheckedIn);
-            }
-            else if (iid == -2) {
+            else if (cmd.text == "cancel")
                 throw user_abort();
-            }
-            else if (!lib->validItemId(iid)) {
-                cout << "Invalid Item ID specified." << endl;
-                iid = -1;
-            }
+            else
+                iid = parse_id(cmd.text);
         }
     }
 
@@ -101,33 +166,20 @@ int requestItemId(bool checkedOut)
 
 void listPatronsBooks()
 {
-    int pid = requestPatronId();
+    int pid = request_patron_id();
 
     lib->listPatronItems(cout, pid);
 }
 
-void checkout(string args)
+void checkout(string patron_id, string item_id)
 {
-    string patron_id = "";
-    string item_id = "";
-    if (args.find(' ') != string::npos) {
-        patron_id = args.substr(0, args.find(' '));
-        item_id = args.substr(args.find(' '));
-    }
+    int pid = parse_id(patron_id);
+    if (pid == -1) 
+        pid = request_patron_id();
     
-    int pid = -1;
-    if (patron_id.empty()) {
-        pid = requestPatronId();
-    } else {
-        pid = stoi(patron_id);
-    }
-    
-    int iid = -1;
-    if (item_id.empty()) {
-        iid = requestItemId(false);
-    } else {
-        iid = stoi(item_id);
-    }
+    int iid = parse_id(item_id);
+    if (iid == -1)
+        iid = request_item_id(false);
     
     CheckOutStatus status = lib->checkout(pid, iid);
 
@@ -152,13 +204,10 @@ void checkout(string args)
 
 void checkin(string item_id)
 {
-    int iid = -1;
+    int iid = parse_id(item_id);
     
-    if (item_id.empty()) {
-        iid = requestItemId(true);
-    } else {
-        iid = stoi(item_id);
-    }
+    if (iid == -1)
+        iid = request_item_id(true);
 
     CheckInStatus status = lib->checkin(iid);
 
@@ -205,26 +254,48 @@ void list(string input) {
     }
 }
 
+
+void advanceDate()
+{
+    cout << "\ntoday is: " << Date::Instance().TodaysDateIs() << endl;
+	cout <<"How many days would you like to advance:  ";
+	
+	string days;
+    
+    if ( getline(cin, days) ) {
+        Date::Instance().AdvanceDate(stoi(days));
+    } else {
+        cin.clear();
+        cin.ignore(INT_MAX, '\n');
+        advanceDate();
+    }
+    
+	cout << "today is now: " << Date::Instance().TodaysDateIs() << endl;
+};
+
 LibraryCommand getCommand() {
-    cout << endl << "Enter a command: ";
+    cout << endl;
+    prompt("Enter a command");
     
     string command;
     
     if ( getline(cin, command) )
     {
-        if (command.find("checkin") != string::npos) {
-            checkin(command.substr(command.find(' ')+1));
+        Command cmd = parse_line(command);
+
+        if (cmd.text == "checkin") {
+            checkin(cmd.arg1);
             return LibraryCommandCheckIn;
-        } else if (command.find("checkout") != string::npos) {
-            checkout(command.substr(command.find(' ')+1));
+        } else if (cmd.text == "checkout") {
+            checkout(cmd.arg1, cmd.arg2);
             return LibraryCommandCheckOut;
-        } else if (command.find("list") != string::npos) {
-            list(command.substr(command.find(' ')+1));
+        } else if (cmd.text == "list") {
+            list(cmd.arg1);
             return LibraryCommandList;
-        } else if (command.find("advance_date") != string::npos) {
-            Date::Instance().AdvanceDate();
+        } else if (cmd.text == "advance_date") {
+            advanceDate();
             return LibraryCommandAdvanceDate;
-        } else if (command.find("quit") != string::npos || command.find("q") != string::npos) {
+        } else if (cmd.text == "quit" || cmd.text == "q") {
             return LibraryCommandQuit;
         } else {
             cout << "Please enter a valid command." << endl;
