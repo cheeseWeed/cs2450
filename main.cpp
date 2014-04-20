@@ -47,7 +47,7 @@ Command parse_line(string line)
     return c;
 }
 
-int parse_id(string text)
+int parse_num(string text)
 {
     int result = -1;
     
@@ -59,7 +59,7 @@ int parse_id(string text)
         }
         catch (...)
         {
-            cout << "Invalid id specified: " << text << endl;
+            cout << "Invalid number specified: " << text << endl;
         }
     }
 
@@ -70,6 +70,13 @@ void prompt(string text)
 {
     cout << "[" << Date::Instance().TodaysDateIs() << "]" << endl;
     cout << text << ": ";
+}
+
+void print_advance_date_help()
+{
+    cout << tab << "<days> or <command>" << endl;
+    cout << tab << tab << "help (display this screen)" << endl;
+    cout << tab << tab << "cancel (abort this operation)" << endl;
 }
 
 void print_request_patron_id_help() 
@@ -129,7 +136,7 @@ int request_patron_id()
             else if (cmd.text == "cancel")
                 throw user_abort();
             else
-                pid = parse_id(cmd.text);
+                pid = parse_num(cmd.text);
         }
     }
 
@@ -158,7 +165,7 @@ int request_item_id(bool checkedOut)
             else if (cmd.text == "cancel")
                 throw user_abort();
             else
-                iid = parse_id(cmd.text);
+                iid = parse_num(cmd.text);
         }
     }
 
@@ -174,11 +181,11 @@ void listPatronsBooks()
 
 void checkout(string patron_id, string item_id)
 {
-    int pid = parse_id(patron_id);
+    int pid = parse_num(patron_id);
     if (pid == -1) 
         pid = request_patron_id();
     
-    int iid = parse_id(item_id);
+    int iid = parse_num(item_id);
     if (iid == -1)
         iid = request_item_id(false);
     
@@ -205,7 +212,7 @@ void checkout(string patron_id, string item_id)
 
 void checkin(string item_id)
 {
-    int iid = parse_id(item_id);
+    int iid = parse_num(item_id);
     
     if (iid == -1)
         iid = request_item_id(true);
@@ -256,21 +263,30 @@ void list(string input) {
 }
 
 
-void advanceDate()
+void advanceDate(string days)
 {
-    cout << "\ntoday is: " << Date::Instance().TodaysDateIs() << endl;
-	cout <<"How many days would you like to advance:  ";
-	
-	string days;
-    
-    if ( getline(cin, days) ) {
-        Date::Instance().AdvanceDate(stoi(days));
-    } else {
-        cin.clear();
-        cin.ignore(INT_MAX, '\n');
-        advanceDate();
+    int d = parse_num(days);
+
+    while (d < 0)
+    {
+        prompt("Enter days to advance");
+        
+        string line;
+        if( getline(cin, line) )
+        {
+            Command cmd = parse_line(line);
+
+            if (cmd.text == "help")
+                print_advance_date_help();
+            else if (cmd.text == "cancel")
+                throw user_abort();
+            else
+                d = parse_num(cmd.text);
+        }
     }
-    
+
+    Date::Instance().AdvanceDate(d);
+
 	cout << "today is now: " << Date::Instance().TodaysDateIs() << endl;
 };
 
@@ -294,7 +310,7 @@ LibraryCommand getCommand() {
             list(cmd.arg1);
             return LibraryCommandList;
         } else if (cmd.text == "advance_date") {
-            advanceDate();
+            advanceDate(cmd.arg1);
             return LibraryCommandAdvanceDate;
         } else if (cmd.text == "quit" || cmd.text == "q") {
             return LibraryCommandQuit;
