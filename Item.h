@@ -71,7 +71,11 @@ public:
         
         os << std::setw(COLUMN_WIDTH_DUE) << std::left << (item.patron_id == 0?"-":Date::Instance().convertTime_tToString(item.due_date));
         
-        os << (item.patron_id == 0?"In":"Out") << std::endl;
+        std::string status = "In";
+        if (item.patron_id != 0)
+            status = item.isOverdue()?"LATE":"Out";
+
+        os << status << std::endl;
         
         return os;
     }
