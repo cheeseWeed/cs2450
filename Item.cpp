@@ -16,6 +16,29 @@ int Item::getId()
     return id;
 }
 
+string Item::getTypeName()
+{
+    string result;
+
+    switch (type)
+    {
+        case ItemTypeAdultBook:
+            result = "Book";
+            break;
+        case ItemTypeChildBook:
+            result = "Kids Book";
+            break;
+        case ItemTypeVideoTape:
+            result = "VHS";
+            break;
+        case ItemTypeDVD:
+            result = "DVD";
+            break;
+    }
+
+    return result;
+}
+
 bool Item::isOverdue()
 {
     time_t now = Date::Instance().TodayIs();
@@ -25,7 +48,11 @@ bool Item::isOverdue()
 
 void Item::printColumns(std::ostream &os)
 {
-    os << setw(COLUMN_WIDTH_SMALL) << left << "ID" << setw(COLUMN_WIDTH_LARGE+COLUMN_WIDTH_LARGE+COLUMN_WIDTH_SMALL) << left << "Title" << setw(COLUMN_WIDTH_SMALL) << left << "Type" << setw(COLUMN_WIDTH_LARGE) << left << "Due Date" << setw(COLUMN_WIDTH_SMALL) << left << "Patron" << endl;
+    os << setw(COLUMN_WIDTH_ID) << left << "ID";
+    os << setw(COLUMN_WIDTH_TITLE) << left << "Title";
+    os << setw(COLUMN_WIDTH_TYPE) << left << "Type";
+    os << setw(COLUMN_WIDTH_DUE) << left << "Due Date";
+    os << "Status" << endl;
 }
 
 Shared_item Item::readFromStream(std::istream &is)

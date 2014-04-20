@@ -128,6 +128,7 @@ void Library::listItems(ostream &os, ItemSearch is) {
 
 void Library::listAllPatrons(ostream &os)
 {
+    Patron::printColumns(os);
     for (auto &patron: patrons)
     {
         os << *patron;

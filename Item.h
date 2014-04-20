@@ -15,8 +15,10 @@
 #include "Constants.h"
 #include "Date.h"
 
-#define COLUMN_WIDTH_SMALL 7
-#define COLUMN_WIDTH_LARGE 20
+#define COLUMN_WIDTH_ID 7
+#define COLUMN_WIDTH_TITLE 27
+#define COLUMN_WIDTH_TYPE 10
+#define COLUMN_WIDTH_DUE 11
 
 class Item;
 
@@ -44,6 +46,8 @@ public:
 
     ItemType getType() { return type; }
 
+    std::string getTypeName();
+
     bool isOverdue();
 
     static void printColumns(std::ostream &os);
@@ -58,22 +62,18 @@ public:
     
     friend std::ostream& operator<<(std::ostream &os, Item &item)
     {
-        os << std::setw(COLUMN_WIDTH_SMALL) << std::left << item.id;
+        os << std::setw(COLUMN_WIDTH_ID) << std::left << item.id;
         
-        size_t titleLength = COLUMN_WIDTH_LARGE+COLUMN_WIDTH_LARGE+COLUMN_WIDTH_SMALL;
-        std::string title = item.title;
-        if (title.length() > titleLength-1) {
-            title = title.substr(0, titleLength-4) + "...";
-        }
-        os << std::setw(titleLength) << std::left << title;
+        std::string title = trunc(item.title, COLUMN_WIDTH_TITLE);
+        os << std::setw(COLUMN_WIDTH_TITLE) << std::left << title;
         
-        os << std::setw(COLUMN_WIDTH_SMALL) << std::left << item.type;
+        os << std::setw(COLUMN_WIDTH_TYPE) << std::left << item.getTypeName();
         
-        os << std::setw(COLUMN_WIDTH_LARGE) << std::left << Date::Instance().convertTime_tToString(item.due_date);
+        os << std::setw(COLUMN_WIDTH_DUE) << std::left << (item.patron_id == 0?"-":Date::Instance().convertTime_tToString(item.due_date));
         
-        os << std::setw(COLUMN_WIDTH_SMALL) << std::left << item.patron_id;
+        os << (item.patron_id == 0?"In":"Out") << std::endl;
         
-        return os << std::endl;
+        return os;
     }
 };
 

@@ -17,4 +17,13 @@ inline std::ostream& tab(std::ostream& os) {
     return os << '\t';
 };
 
+inline std::string trunc(std::string val, size_t length) {
+    std::string result = val;
+
+    if (result.length() > length - 1)
+        result = result.substr(0, length - 4) + "...";
+
+    return result;
+}
+
 #endif
