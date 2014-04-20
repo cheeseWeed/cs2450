@@ -60,7 +60,7 @@ public:
     {
         os << std::setw(COLUMN_WIDTH_SMALL) << std::left << item.id;
         
-        int titleLength = COLUMN_WIDTH_LARGE+COLUMN_WIDTH_LARGE+COLUMN_WIDTH_SMALL;
+        size_t titleLength = COLUMN_WIDTH_LARGE+COLUMN_WIDTH_LARGE+COLUMN_WIDTH_SMALL;
         std::string title = item.title;
         if (title.length() > titleLength-1) {
             title = title.substr(0, titleLength-4) + "...";

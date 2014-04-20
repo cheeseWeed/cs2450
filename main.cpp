@@ -243,6 +243,9 @@ LibraryCommand getCommand() {
 void mainMenu()
 {
     cout << "Welcome to the Library! (enter 'help' to get a list of commands')" << endl;
+    
+    print_help();
+    
     bool quit = false;
     while (!quit)
     {
