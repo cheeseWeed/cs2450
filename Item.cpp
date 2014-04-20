@@ -18,7 +18,7 @@ int Item::getId()
 
 bool Item::isOverdue()
 {
-    time_t now = time(NULL);
+    time_t now = Date::Instance().TodayIs();
 
     return patron_id != 0 && due_date < now;
 }
@@ -94,7 +94,8 @@ CheckOutStatus Item::checkOut(Unique_patron& p)
             throw logic_error("Item Type Is NOT recognized.");
     }
 
-    due_date = time(NULL) + days * 24 * 60 * 60;
+    time_t now = Date::Instance().TodayIs();
+    due_date = now + days * 24 * 60 * 60;
 
     return CheckOutStatusSuccess;
 }
@@ -111,7 +112,8 @@ CheckInStatus Item::checkIn(Unique_patron& p)
 
     patron_id = 0;
 
-    if (due_date < time(NULL))
+    time_t now = Date::Instance().TodayIs();
+    if (due_date < now)
         return CheckInStatusLate;
 
     return CheckInStatusSuccess;
