@@ -2,7 +2,8 @@ build: Makefile Date.o Item.o Patron.o Library.o main.cpp
 	g++ -g -std=c++11 -Wall Date.o Item.o Patron.o Library.o main.cpp
 	mv a.out library
 
-test: Makefile Date.o Item.o Patron.o Library.o test_main.cpp
+test: Makefile Date.o Item.o Patron.o Library.o test_main.cpp library_file_test.orig
+	cp library_file_test.orig library_file_test.ldb
 	g++ -g -std=c++11 -Wall Date.o Item.o Patron.o Library.o test_main.cpp
 	mv a.out test_library
 

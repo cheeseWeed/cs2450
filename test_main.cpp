@@ -7,7 +7,7 @@
 #include "Date.h"
 #include "Constants.h"
 
-#define assert(x, y) { cout << x << ": "; if (y) cout << "TEST SUCCESS"; else cout << "TEST FAILED"; cout << endl; }
+#define assert(x, y) { if (y) cout << "TEST SUCCESS"; else cout << "TEST FAILED"; cout << ": " << tab << x << endl; }
 
 using namespace std;
 
@@ -20,84 +20,72 @@ int main(int argc, const char * argv[]) {
 
 	//test the checkout
 	try{
-		lib.checkout(1, 1);
-		assert("testCheckout", true);
+		lib.checkout(1, 3);
+		assert("Checkout", true);
 	}
 	catch (exception e){
-		assert("testCheckout", false);
+		assert("Checkout", false);
 	}
 
 	//test if checkout fail
 	try{
 		lib.checkout(1, 99);
-		assert("testCheckoutFail book id", false);
+		assert("Checkout Fail (bad item_id)", false);
 	}
 	catch (exception e){
-		assert("testCheckoutFail book id", true);
+		assert("Checkout Fail (bad item_id)", true);
 	}
 
 	//test if checkout fail
 	try{
 		lib.checkout(4, 1);
-		assert("testCheckoutFail user id", false);
+		assert("Checkout Fail (bad patron_id)", false);
 	}
 	catch (exception e){
-		assert("testCheckoutFail user id", true);
+		assert("Checkout Fail (bad patron_id)", true);
 	}
 
 	//test if checkout fail
 	try{
 		lib.checkout(4, 99);
-		assert("testCheckoutFail user id and book id", false);
+		assert("Checkout Fail (bad patron_id & item_id)", false);
 	}
 	catch (exception e){
-		assert("testCheckoutFail user id and book id", true);
+		assert("Checkout Fail (bad patron_id & item_id)", true);
 	}
 
 	//test advance date
-	cout << Date::Instance().TodaysDateIs() << "\nadvance date 5 days" << endl;
-	Date::Instance().AdvanceDate(5);
+	cout << Date::Instance().TodaysDateIs() << endl << " Advancing date +8 days." << endl;
+	Date::Instance().AdvanceDate(8);
 	cout << Date::Instance().TodaysDateIs() << endl;
 
 	//test if item id is valid
 		if (lib.validItemId(10) == 1){
-			assert("test item id", true);
+			assert("Valid item_id", true);
 		}
 		else{
-			assert("test item id", false);
+			assert("Valid item_id", false);
 		}
 
 	//test if item id is valid
 		if (lib.validItemId(99) == 0){
-			assert("test item id fail", true);
+			assert("Invalid item_id", true);
 		}
 		else{
-			assert("test item id fail", false);
+			assert("Invalid item_id", false);
 		}
 
-	//test if overdue items list is correct
+	// test if overdue items list is correct
 	ss.str(std::string()); // clear ss
 	lib.listItems(ss, ItemSearchOverdue);
 	output = ss.str();
-	assert("List overdue Items", output.find("Ender's Game")!= string::npos);
-
-	//test if overdue items list is correct
-	ss.str(std::string()); // clear ss
-	lib.listItems(ss, ItemSearchOverdue);
-	output = ss.str();
-	assert("List overdue Items", output.find("Xenocide") == string::npos);
-
+	assert("List Overdue Items", output.find("Ender\'s Game") != string::npos && output.find("Xenocide") == string::npos);
+    
 	//test the items in the list
 	ss.str(std::string()); // clear ss
 	lib.listItems(ss, ItemSearchAll);
 	output = ss.str();
 	assert("List All Items", output.find("Jurassic Park") != string::npos);
-
-	//test the items in the list
-	ss.str(std::string()); // clear ss
-	lib.listItems(ss, ItemSearchAll);
-	output = ss.str();
-	assert("List All Items", output.find("pink floyd") == string::npos);
 
 	//test the number of items in the list
 	int count = 0;
@@ -105,10 +93,11 @@ int main(int argc, const char * argv[]) {
 	{
 		count++;
 	}
-	assert("List All Items Count", count == 13)
+    ss.clear();
+	assert("List All Items (by line count)", count == 13)
 
 
-		//test list items that a patron has
+    //test list items that a patron has
 	ss.str(std::string()); // clear ss
 	lib.listPatronItems(ss, 1);
 	output = ss.str();
@@ -118,43 +107,43 @@ int main(int argc, const char * argv[]) {
 	ss.str(std::string());
 	lib.listAllPatrons(ss);
 	output = ss.str();
-	assert("list patrons", output.find("Dan") != string::npos);
+	assert("List Patrons", output.find("Dan") != string::npos);
 
 	//checks patrons id
 	if (lib.validPatronId(1) == 1){
-		assert("test patron id",true);
+		assert("Valid patron_id",true);
 	}
 	else{
-		assert("test patron id", false);
+		assert("Valid patron_id", false);
 	}
 
 	//checks patrons id fail
 	if (lib.validPatronId(1) == 0){
-		assert("test patron id", false);
+		assert("Invalid patron_id", false);
 	}
 	else{
-		assert("test patron id", true);
+		assert("Invalid patron_id", true);
 	}
 
 
 	//test the checkin
 	try{
 		lib.checkin(1);
-		assert("test checkin", true);
+		assert("Checkin", true);
 	}
 	catch (exception e){
 
-		assert("test checkin", false);
+		assert("Checkin", false);
 	}
 
 	//test the checkin fail
 	try{
 		lib.checkin(40);
-		assert("test checkin fail", false);
+		assert("Checkin Fail", false);
 	}
 	catch (exception e){
 
-		assert("test checkin fail", true);
+		assert("Checkin Fail", true);
 	}
 	//cout << Date::Instance().TodaysDateIs() << endl;
 	//cout<<Date::Instance().convertTime_tToString(Date::Instance().TodayIs())<<endl;
